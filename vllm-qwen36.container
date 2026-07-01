@@ -1,0 +1,15 @@
+[Unit]
+Description=vLLM Qwen3.6-27B-FP8 server
+After=network-online.target
+Wants=network-online.target
+
+[Container]
+Image=localhost/vllm-qwen36:latest
+ContainerName=vllm-qwen36
+PublishPort=8000:8000
+AddDevice=nvidia.com/gpu=all
+PodmanArgs=--ipc=host
+
+[Install]
+WantedBy=multi-user.target
+
