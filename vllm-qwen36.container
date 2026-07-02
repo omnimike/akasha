@@ -12,6 +12,7 @@ PodmanArgs=--ipc=host
 Volume=/var/lib/local-agents:/root/.cache/huggingface
 
 [Service]
+ExecStartPre=/usr/bin/podman build -t localhost/vllm-qwen36:latest -f /usr/share/local-agents/Containerfile /usr/share/local-agents
 TimeoutStartSec=infinity
 Restart=on-failure
 RestartSec=10
