@@ -11,6 +11,7 @@ AddDevice=nvidia.com/gpu=all
 PodmanArgs=--ipc=host
 Volume=/var/lib/local-agents:/root/.cache/huggingface
 Network=host
+UserNS=auto
 
 # Environment variables
 Environment=VLLM_USE_DEEP_GEMM=0
