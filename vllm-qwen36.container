@@ -10,14 +10,18 @@ PublishPort=8000:8000
 AddDevice=nvidia.com/gpu=all
 PodmanArgs=--ipc=host
 Volume=/var/lib/local-agents:/root/.cache/huggingface
+Network=host
 
 # Environment variables
+Environment=VLLM_USE_DEEP_GEMM=0
+
+# We are currently downloading the model when the container starts.
+# These environment variables disable that.
 # Environment=HF_HUB_OFFLINE=1
 # Environment=TORCH_HUB_OFFLINE=1
-Environment=TORCH_DISTRIBUTED_DEBUG=OFF
-Environment=VLLM_NO_USAGE_STATS=1
-Environment=DO_NOT_TRACK=1
-Environment=VLLM_USE_DEEP_GEMM=0
+# Environment=TORCH_DISTRIBUTED_DEBUG=OFF
+# Environment=VLLM_NO_USAGE_STATS=1
+# Environment=DO_NOT_TRACK=1
 
 # Command line arguments
 Exec=--model Qwen/Qwen3.6-27B-FP8 \
