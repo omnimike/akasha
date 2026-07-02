@@ -1,0 +1,33 @@
+# local-agents
+
+Arch Linux package that installs systemd Quadlet files to run local LLM inference containers via Podman.
+
+## Structure
+
+- `PKGBUILD` — Arch package definition; installs Quadlet `.container` and systemd `.target` files
+- `vllm-qwen36.container` — Podman Quadlet for vLLM serving Qwen3.6-27B-FP8 on port 8000
+- `local-agents.target` — systemd target that pulls the container service into a single enable/start unit
+- `local-agents.install` — pacman hooks: `daemon-reload` on install/upgrade, cleanup on remove
+- `Makefile` — thin wrapper around `makepkg`
+
+## Commands
+
+- `make build` — build the `.pkg.tar.zst` package
+- `make install` — build + install via `pacman` (requires root)
+- `make uninstall` — remove package via `pacman` (triggers model/cache cleanup in hook)
+- `make clean` — remove `pkg/`, `src/`, `*.pkg.tar*`
+
+## How it runs
+
+After `make install`, enable/start the target:
+```
+sudo systemctl enable --now local-agents.target
+```
+This creates `vllm-qwen36.service` via Quadlet, pulling the `vllm/vllm-openai:latest` image and mounting `/var/lib/local-agents` as the HuggingFace cache. The container listens on `localhost:8000` with an OpenAI-compatible API.
+
+## Key details
+
+- Model cache lives at `/var/lib/local-agents` (mounted as `/root/.cache/huggingface` in the container)
+- `post_remove` hook deletes this cache and removes the podman image — `make uninstall` is destructive
+- GPU access requires `nvidia-container-toolkit`
+- Adding a new model/container: create a `<name>.container` Quadlet file, add it to `local-agents.target` via `Wants=`, and list it in `source=` in the PKGBUILD
