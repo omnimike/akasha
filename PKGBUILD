@@ -11,16 +11,12 @@ depends=(
 )
 install=local-agents.install
 source=(
-  'Containerfile'
   'vllm-qwen36.container'
   'local-agents.target'
 )
-sha256sums=('SKIP' 'SKIP' 'SKIP')
+sha256sums=('SKIP' 'SKIP')
 
 package() {
-  # Install the Containerfile for building during installation
-  install -Dm644 "${srcdir}/Containerfile" "${pkgdir}/usr/share/${pkgname}/Containerfile"
-
   # Install the Quadlet container file
   install -Dm644 "${srcdir}/vllm-qwen36.container" "${pkgdir}/usr/share/containers/systemd/vllm-qwen36.container"
 

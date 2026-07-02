@@ -8,9 +8,8 @@ post_upgrade() {
 }
 
 post_remove() {
-  echo "=== Removing podman container localhost/vllm-qwen36 ==="
-  podman rmi localhost/vllm-qwen36:latest || true
-  podman builder prune
+  echo "=== Removing podman images ==="
+  podman rmi docker.io/vllm/vllm-openai:latest || true
 
   echo "=== Deleting local models in /var/lib/local-agents ==="
   rm -rf /var/lib/local-agents
