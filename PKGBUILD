@@ -9,28 +9,25 @@ depends=(
   'podman'
   'nvidia-container-toolkit'
 )
-makedepends=('buildah')
+install=local-agents.install
 source=(
   'Containerfile'
-  'vllm-qwen36.service'
+  'vllm-qwen36.container'
   'local-agents.target'
 )
 sha256sums=('SKIP' 'SKIP' 'SKIP')
 
-build() {
-  echo "--- Building monolithic SIF image using buildah ---"
-  buildah bud \
-    --isolation=chroot \
-    -f "${srcdir}/Containerfile" \
-    -o sif="${srcdir}/local-agents.sif" \
-    "${srcdir}"
-}
-
 package() {
-  # Container SIF file
-  install -Dm644 "${srcdir}/local-agents.sif" "${pkgdir}/usr/share/${pkgname}/local-agents.sif"
+  # Install the Containerfile for building during installation
+  install -Dm644 "${srcdir}/Containerfile" "${pkgdir}/usr/share/${pkgname}/Containerfile"
 
-  # Systemd units
-  install -Dm644 "${srcdir}/vllm-qwen36.service" "${pkgdir}/usr/lib/systemd/system/vllm-qwen36.service"
+  # Install the Quadlet container file
+  install -Dm644 "${srcdir}/vllm-qwen36.container" "${pkgdir}/usr/share/containers/systemd/vllm-qwen36.container"
+
+  # Install the systemd target
   install -Dm644 "${srcdir}/local-agents.target" "${pkgdir}/usr/lib/systemd/system/local-agents.target"
+
+  # Create the model cache directory
+  install -d -m 755 "${pkgdir}/var/lib/${pkgname}"
 }
+

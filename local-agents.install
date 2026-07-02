@@ -1,0 +1,23 @@
+post_install() {
+  echo "=== Building podman container localhost/vllm-qwen36 ==="
+  # Build the container using podman. Since pacman runs as root, this builds in root's container storage.
+  podman build -t localhost/vllm-qwen36:latest -f /usr/share/local-agents/Containerfile /usr/share/local-agents
+
+  echo "=== Reloading systemd manager configuration ==="
+  systemctl daemon-reload
+}
+
+post_upgrade() {
+  post_install "$@"
+}
+
+post_remove() {
+  echo "=== Removing podman container localhost/vllm-qwen36 ==="
+  podman rmi localhost/vllm-qwen36:latest || true
+
+  echo "=== Deleting local models in /var/lib/local-agents ==="
+  rm -rf /var/lib/local-agents
+
+  echo "=== Reloading systemd manager configuration ==="
+  systemctl daemon-reload
+}

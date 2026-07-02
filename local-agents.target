@@ -1,3 +1,5 @@
 [Unit]
 Description=Local LLM Agents Target
 Wants=vllm-qwen36.service
+Requires=multi-user.target
+After=multi-user.target

@@ -1,12 +1,11 @@
 FROM docker.io/vllm/vllm-openai:latest
 
-# Download the model during the image build process
-RUN python3 -c "from huggingface_hub import snapshot_download; snapshot_download('Qwen/Qwen3.6-27B-FP8')"
+# We are going to download the model file on the first startup
+# ENV HF_HUB_OFFLINE=1
+# ENV TORCH_HUB_OFFLINE=1
 
-# Do not talk to the internet on startup
-ENV HF_HUB_OFFLINE=1
+# Do not talk to the internet
 ENV TORCH_DISTRIBUTED_DEBUG=OFF
-ENV TORCH_HUB_OFFLINE=1
 ENV VLLM_NO_USAGE_STATS=1
 ENV DO_NOT_TRACK=1
 
