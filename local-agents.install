@@ -1,6 +1,7 @@
 post_install() {
   echo "=== Reloading systemd manager configuration ==="
   systemctl enable vllm-qwen36.service
+  systemctl enable hermes-agent.service
   systemctl daemon-reload
 }
 
@@ -11,6 +12,7 @@ post_upgrade() {
 post_remove() {
   echo "=== Removing podman images ==="
   podman rmi docker.io/vllm/vllm-openai:latest || true
+  podman rmi docker.io/nousresearch/hermes-agent:latest || true
 
   echo "=== Deleting local models in /var/lib/local-agents ==="
   rm -rf /var/lib/local-agents

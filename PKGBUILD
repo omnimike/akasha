@@ -12,14 +12,20 @@ depends=(
 install=local-agents.install
 source=(
   'vllm-qwen36.container'
+  'hermes-agent.container'
 )
-sha256sums=('SKIP')
+sha256sums=(
+  'SKIP'
+  'SKIP'
+)
 
 package() {
-  # Install the Quadlet container file
+  # Install the Quadlet container files
   install -Dm644 "${srcdir}/vllm-qwen36.container" "${pkgdir}/usr/share/containers/systemd/vllm-qwen36.container"
+  install -Dm644 "${srcdir}/hermes-agent.container" "${pkgdir}/usr/share/containers/systemd/hermes-agent.container"
 
-  # Create the model cache directory
+  # Create data directories
   install -d -m 755 "${pkgdir}/var/lib/${pkgname}"
+  install -d -m 755 "${pkgdir}/var/lib/${pkgname}/hermes"
 }
 

@@ -1,0 +1,27 @@
+[Unit]
+Description=Hermes Agent gateway
+After=network-online.target vllm-qwen36.service multi-user.target
+Wants=network-online.target vllm-qwen36.service
+
+[Container]
+Image=docker.io/nousresearch/hermes-agent:latest
+Network=host
+ContainerName=hermes-agent
+
+# Data volume
+Volume=/var/lib/local-agents/hermes:/opt/data
+
+# Enable API server and dashboard
+Environment=API_SERVER_ENABLED=true
+Environment=HERMES_DASHBOARD=1
+
+# Command
+Exec=gateway run
+
+[Service]
+TimeoutStartSec=infinity
+Restart=on-failure
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target
