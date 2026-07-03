@@ -3,3 +3,4 @@
 /src/
 *.pkg.tar*
 *.src.tar.gz
+.opencode
