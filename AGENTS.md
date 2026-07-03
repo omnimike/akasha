@@ -30,3 +30,12 @@ This creates `vllm-qwen36.service` via Quadlet, pulling the `vllm/vllm-openai:la
 - `post_remove` hook deletes this cache and removes the podman image — `make uninstall` is destructive
 - GPU access requires `nvidia-container-toolkit`
 - Adding a new model/container: create a `<name>.container` Quadlet file and list it in `source=` in the PKGBUILD
+
+## Commit Message Format
+
+All commit message titles must be prefixed with the subsystem they affect:
+
+- `[vllm]` — changes to `vllm-qwen36.container` or vLLM-specific configuration
+- `[hermes]` — changes to `hermes-agent.container` or hermes-specific configuration
+- `[pkg]` — changes to `PKGBUILD`, `local-agents.install`, `Makefile`, or other packaging files
+- `[]` — changes affecting multiple subsystems or shared infrastructure
