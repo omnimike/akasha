@@ -6,6 +6,7 @@ Arch Linux package that installs systemd Quadlet files to run local LLM inferenc
 
 - `PKGBUILD` — Arch package definition; installs Quadlet `.container` and systemd `.target` files
 - `vllm-qwen36.container` — Podman Quadlet for vLLM serving Qwen3.6-27B-FP8 on port 8000
+- `hermes-agent.container` — Podman Quadlet for hermes-agent gateway with API server and dashboard
 - `local-agents.install` — pacman hooks: `daemon-reload` on install/upgrade, cleanup on remove
 - `Makefile` — thin wrapper around `makepkg`
 
@@ -22,12 +23,13 @@ After `make install`, enable/start the target:
 ```
 sudo systemctl enable --now vllm-qwen36.service
 ```
-This creates `vllm-qwen36.service` via Quadlet, pulling the `vllm/vllm-openai:latest` image and mounting `/var/lib/local-agents` as the HuggingFace cache. The container listens on `localhost:8000` with an OpenAI-compatible API.
+This creates `vllm-qwen36.service` via Quadlet, pulling the `vllm/vllm-openai:latest` image and mounting `/var/lib/models/vllm` as the HuggingFace cache. The container listens on `localhost:8000` with an OpenAI-compatible API.
 
 ## Key details
 
-- Model cache lives at `/var/lib/local-agents` (mounted as `/root/.cache/huggingface` in the container)
-- `post_remove` hook deletes this cache and removes the podman image — `make uninstall` is destructive
+- Model cache lives at `/var/lib/models/vllm` (mounted as `/root/.cache/huggingface` in the container)
+- Hermes agent data lives at `/var/lib/models/hermes`
+- `post_remove` hook deletes these caches and removes the podman images — `make uninstall` is destructive
 - GPU access requires `nvidia-container-toolkit`
 - Adding a new model/container: create a `<name>.container` Quadlet file and list it in `source=` in the PKGBUILD
 
