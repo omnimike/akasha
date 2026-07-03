@@ -15,6 +15,11 @@ Volume=/var/lib/local-agents/hermes:/opt/data
 Environment=API_SERVER_ENABLED=true
 Environment=HERMES_DASHBOARD=1
 
+# Dashboard basic auth
+Environment=HERMES_DASHBOARD_BASIC_AUTH_USERNAME=hermes
+Environment=HERMES_DASHBOARD_BASIC_AUTH_PASSWORD=changeme
+Environment=HERMES_DASHBOARD_BASIC_AUTH_SECRET=15a5a5a553a5c7269a482f882d882876
+
 # Command
 Exec=gateway run
 
