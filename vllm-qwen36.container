@@ -1,17 +1,15 @@
 [Unit]
 Description=vLLM Qwen3.6-27B-FP8 server
-After=network-online.target
-Wants=network-online.target
+After=network-online.target nvidia-persistenced.service
+Wants=network-online.target nvidia-persistenced.service
 
 [Container]
 Image=docker.io/vllm/vllm-openai:latest
+Network=host
 ContainerName=vllm-qwen36
-PublishPort=8000:8000
 AddDevice=nvidia.com/gpu=all
 PodmanArgs=--ipc=host
 Volume=/var/lib/local-agents:/root/.cache/huggingface
-Network=host
-UserNS=auto
 
 # Environment variables
 Environment=VLLM_USE_DEEP_GEMM=0
@@ -38,7 +36,7 @@ Exec=--model Qwen/Qwen3.6-27B-FP8 \
 [Service]
 TimeoutStartSec=infinity
 Restart=on-failure
-RestartSec=10
+RestartSec=30
 
 [Install]
-WantedBy=local-agents.target
+WantedBy=multi-user.target

@@ -16,7 +16,6 @@ A Pacman package for running local LLM inference servers on Arch Linux, managed 
 
 ```bash
 make install
-sudo systemctl enable --now local-agents.target
 ```
 
 ## Usage
@@ -30,8 +29,7 @@ curl http://localhost:8000/v1/models
 ## Adding a New Model/Container
 
 1. Create a `<name>.container` Quadlet file.
-2. Add `Wants=<name>.service` to `local-agents.target`.
-3. List the file in `source=` in the `PKGBUILD`.
+2. List the file in `source=` in the `PKGBUILD`.
 
 ## Model Cache
 

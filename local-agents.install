@@ -1,5 +1,6 @@
 post_install() {
   echo "=== Reloading systemd manager configuration ==="
+  systemctl enable vllm-qwen36.service
   systemctl daemon-reload
 }
 

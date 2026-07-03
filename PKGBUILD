@@ -12,16 +12,12 @@ depends=(
 install=local-agents.install
 source=(
   'vllm-qwen36.container'
-  'local-agents.target'
 )
-sha256sums=('SKIP' 'SKIP')
+sha256sums=('SKIP')
 
 package() {
   # Install the Quadlet container file
   install -Dm644 "${srcdir}/vllm-qwen36.container" "${pkgdir}/usr/share/containers/systemd/vllm-qwen36.container"
-
-  # Install the systemd target
-  install -Dm644 "${srcdir}/local-agents.target" "${pkgdir}/usr/lib/systemd/system/local-agents.target"
 
   # Create the model cache directory
   install -d -m 755 "${pkgdir}/var/lib/${pkgname}"
