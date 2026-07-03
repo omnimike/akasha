@@ -9,7 +9,7 @@ Network=host
 ContainerName=vllm-qwen36
 AddDevice=nvidia.com/gpu=all
 PodmanArgs=--ipc=host
-Volume=/var/lib/models/vllm:/root/.cache/huggingface
+Volume=/var/lib/local-agents/vllm:/root/.cache/huggingface
 
 # Environment variables
 Environment=VLLM_USE_DEEP_GEMM=0

@@ -23,12 +23,12 @@ After `make install`, enable/start the target:
 ```
 sudo systemctl enable --now vllm-qwen36.service
 ```
-This creates `vllm-qwen36.service` via Quadlet, pulling the `vllm/vllm-openai:latest` image and mounting `/var/lib/models/vllm` as the HuggingFace cache. The container listens on `localhost:8000` with an OpenAI-compatible API.
+This creates `vllm-qwen36.service` via Quadlet, pulling the `vllm/vllm-openai:latest` image and mounting `/var/lib/local-agents/vllm` as the HuggingFace cache. The container listens on `localhost:8000` with an OpenAI-compatible API.
 
 ## Key details
 
-- Model cache lives at `/var/lib/models/vllm` (mounted as `/root/.cache/huggingface` in the container)
-- Hermes agent data lives at `/var/lib/models/hermes`
+- Model cache lives at `/var/lib/local-agents/vllm` (mounted as `/root/.cache/huggingface` in the container)
+- Hermes agent data lives at `/var/lib/local-agents/hermes`
 - `post_remove` hook deletes these caches and removes the podman images — `make uninstall` is destructive
 - GPU access requires `nvidia-container-toolkit`
 - Adding a new model/container: create a `<name>.container` Quadlet file and list it in `source=` in the PKGBUILD

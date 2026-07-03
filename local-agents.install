@@ -13,8 +13,8 @@ post_remove() {
   podman rmi docker.io/vllm/vllm-openai:latest || true
   podman rmi docker.io/nousresearch/hermes-agent:latest || true
 
-  echo "=== Deleting local models in /var/lib/models ==="
-  rm -rf /var/lib/models
+  echo "=== Deleting local data in /var/lib/${pkgname} ==="
+  rm -rf /var/lib/local-agents
 
   echo "=== Reloading systemd manager configuration ==="
   systemctl daemon-reload

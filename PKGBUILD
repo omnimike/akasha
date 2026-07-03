@@ -25,7 +25,7 @@ package() {
   install -Dm644 "${srcdir}/hermes-agent.container" "${pkgdir}/usr/share/containers/systemd/hermes-agent.container"
 
   # Create data directories
-  install -d -m 755 "${pkgdir}/var/lib/models/vllm"
-  install -d -m 755 "${pkgdir}/var/lib/models/hermes"
+  install -d -m 755 "${pkgdir}/var/lib/${pkgname}/vllm"
+  install -d -m 755 "${pkgdir}/var/lib/${pkgname}/hermes"
 }
 
