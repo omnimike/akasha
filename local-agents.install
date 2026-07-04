@@ -1,4 +1,7 @@
 post_install() {
+  echo "=== Creating system users ==="
+  systemd-sysusers
+
   echo "=== Reloading systemd manager configuration ==="
   systemctl enable vllm-qwen36.service hermes-agent.service
   systemctl daemon-reload
@@ -27,6 +30,9 @@ post_remove() {
 
   echo "=== Deleting local data in /var/lib/${pkgname} ==="
   rm -rf /var/lib/local-agents
+
+  echo "=== Removing system users ==="
+  userdel vllm || true
 
   echo "=== Reloading systemd manager configuration ==="
   systemctl daemon-reload

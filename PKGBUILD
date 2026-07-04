@@ -8,14 +8,17 @@ license=('MIT')
 depends=(
   'podman'
   'nvidia-container-toolkit'
+  'systemd'
 )
 install=local-agents.install
 source=(
   'vllm-qwen36.container'
   'hermes-agent.container'
   'hermes-agent.env'
+  'sysusers.local-agents'
 )
 sha256sums=(
+  'SKIP'
   'SKIP'
   'SKIP'
   'SKIP'
@@ -26,8 +29,11 @@ package() {
   install -Dm644 "${srcdir}/vllm-qwen36.container" "${pkgdir}/usr/share/containers/systemd/vllm-qwen36.container"
   install -Dm644 "${srcdir}/hermes-agent.container" "${pkgdir}/usr/share/containers/systemd/hermes-agent.container"
 
+  # Install sysusers file for the vllm user
+  install -Dm644 "${srcdir}/sysusers.local-agents" "${pkgdir}/usr/lib/sysusers.d/local-agents.conf"
+
   # Create data directories
-  install -d -m 755 "${pkgdir}/var/lib/${pkgname}/vllm"
+  install -d -m 2755 -o 2000 -g 0 "${pkgdir}/var/lib/${pkgname}/vllm"
   install -d -m 755 "${pkgdir}/var/lib/${pkgname}/hermes"
 
   # Install secrets template (user must fill in before starting)

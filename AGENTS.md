@@ -27,7 +27,9 @@ This creates `vllm-qwen36.service` via Quadlet, pulling the `vllm/vllm-openai:la
 
 ## Key details
 
-- Model cache lives at `/var/lib/local-agents/vllm` (mounted as `/root/.cache/huggingface` in the container)
+- vLLM container runs as the non-root `vllm` user (UID 2000, GID 0) via `User=` in the Quadlet
+- A host `vllm` system user is created by `systemd-sysusers` and deleted on uninstall
+- Model cache lives at `/var/lib/local-agents/vllm` (mounted as `/home/vllm/.cache/huggingface` in the container)
 - Hermes agent data lives at `/var/lib/local-agents/hermes`
 - `post_remove` hook deletes these caches and removes the podman images — `make uninstall` is destructive
 - GPU access requires `nvidia-container-toolkit`
