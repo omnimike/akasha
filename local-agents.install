@@ -18,6 +18,9 @@ post_upgrade() {
 }
 
 post_remove() {
+  echo "=== Stopping services ==="
+  systemctl disable --now vllm-qwen36.service hermes-agent.service || true
+
   echo "=== Removing podman images ==="
   podman rmi docker.io/vllm/vllm-openai:latest || true
   podman rmi docker.io/nousresearch/hermes-agent:latest || true
