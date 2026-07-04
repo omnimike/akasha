@@ -90,9 +90,17 @@ EOF
 fi
 
 echo ""
-echo "=== Next steps ==="
-echo "1. Start the hermes-agent service:"
-echo "   sudo systemctl enable --now hermes-agent.service"
-echo ""
-echo "2. If you also need the vLLM model server:"
-echo "   sudo systemctl enable --now vllm-qwen36.service"
+echo "=== Starting services ==="
+echo "Starting hermes-agent.service ..."
+systemctl start hermes-agent.service
+
+if systemctl is-active --quiet hermes-agent.service; then
+    echo "hermes-agent is running."
+    echo ""
+    echo "=== Next steps ==="
+    echo "- Access the dashboard at http://localhost:9119"
+    echo "- Check logs: journalctl -u hermes-agent -f"
+else
+    echo "hermes-agent failed to start. Check logs:"
+    echo "  journalctl -u hermes-agent -f"
+fi

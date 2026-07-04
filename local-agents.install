@@ -7,7 +7,7 @@ post_install() {
   systemctl daemon-reload
 
   echo ""
-  echo "=== hermes-agent: run the setup wizard ==="
+  echo "=== hermes-agent: run the setup wizard first ==="
   echo "sudo hermes-agent-setup"
   echo "This will:"
   echo "  - Pull the hermes-agent image"
