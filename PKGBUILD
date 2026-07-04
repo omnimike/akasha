@@ -16,9 +16,11 @@ source=(
   'hermes-agent.container'
   'hermes-agent.env'
   'hermes-agent-setup'
+  'hermes'
   'sysusers.local-agents'
 )
 sha256sums=(
+  'SKIP'
   'SKIP'
   'SKIP'
   'SKIP'
@@ -39,9 +41,12 @@ package() {
   install -d -m 2700 -o 10000 -g 0 "${pkgdir}/var/lib/${pkgname}/hermes"
 
   # Install secrets template (user must fill in before starting)
-  install -Dm600 "${srcdir}/hermes-agent.env" "${pkgdir}/etc/local-agents/hermes-agent.env"
+  install -Dm644 "${srcdir}/hermes-agent.env" "${pkgdir}/etc/local-agents/hermes-agent.env"
 
   # Install interactive setup helper
   install -Dm755 "${srcdir}/hermes-agent-setup" "${pkgdir}/usr/bin/hermes-agent-setup"
+
+  # Install CLI chat wrapper
+  install -Dm755 "${srcdir}/hermes" "${pkgdir}/usr/bin/hermes"
 }
 
