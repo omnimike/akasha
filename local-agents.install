@@ -2,6 +2,15 @@ post_install() {
   echo "=== Reloading systemd manager configuration ==="
   systemctl enable vllm-qwen36.service hermes-agent.service
   systemctl daemon-reload
+
+  echo ""
+  echo "=== hermes-agent: set your secrets in /etc/local-agents/hermes-agent.env ==="
+  echo "The service will not work until you configure:"
+  echo "  HERMES_DASHBOARD_BASIC_AUTH_USERNAME"
+  echo "  HERMES_DASHBOARD_BASIC_AUTH_PASSWORD"
+  echo "  HERMES_DASHBOARD_BASIC_AUTH_SECRET"
+  echo "  API_SERVER_KEY"
+  echo "Generate keys with: openssl rand -hex 32"
 }
 
 post_upgrade() {
