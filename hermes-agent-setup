@@ -1,0 +1,98 @@
+#!/bin/bash
+# hermes-agent-setup — interactive setup wizard for hermes-agent.
+# Pulls the image, runs the setup wizard, and writes secrets to the volume.
+# After setup, edit /etc/local-agents/hermes-agent.env to configure dashboard/API keys.
+
+set -euo pipefail
+
+IMAGE="docker.io/nousresearch/hermes-agent:latest"
+DATA_DIR="/var/lib/local-agents/hermes"
+ENV_FILE="/etc/local-agents/hermes-agent.env"
+
+echo "=== Hermes Agent Setup ==="
+
+if [ ! -d "$DATA_DIR" ]; then
+    echo "Data directory $DATA_DIR does not exist."
+    echo "Installing the local-agents package creates it. Run: sudo make install"
+    exit 1
+fi
+
+# Pull the image if not local
+if ! podman image inspect "$IMAGE" &>/dev/null; then
+    echo "Pulling $IMAGE ..."
+    podman pull --quiet "$IMAGE"
+fi
+
+echo ""
+echo "Running the Hermes setup wizard. It will prompt for your API keys"
+echo "and optional chat system configuration."
+echo ""
+
+# Run the interactive setup wizard. Container writes to the mounted /opt/data volume.
+podman run -it --rm \
+    --network host \
+    -v "$DATA_DIR:/opt/data" \
+    "$IMAGE" setup
+
+echo ""
+echo "=== Setup complete ==="
+echo "Your API keys were written to $DATA_DIR/.env"
+echo ""
+
+# Generate dashboard/API secrets if they're still empty
+if [ -f "$ENV_FILE" ]; then
+    needs_update=false
+
+    # Read current values
+    auth_secret=$(grep '^HERMES_DASHBOARD_BASIC_AUTH_SECRET=' "$ENV_FILE" | cut -d= -f2-)
+    api_key=$(grep '^API_SERVER_KEY=' "$ENV_FILE" | cut -d= -f2-)
+
+    if [ -z "$auth_secret" ]; then
+        AUTH_SECRET=$(openssl rand -hex 32)
+        needs_update=true
+    fi
+
+    if [ -z "$api_key" ]; then
+        API_KEY=$(openssl rand -hex 32)
+        needs_update=true
+    fi
+
+    if [ "$needs_update" = true ]; then
+        read -rp "  Dashboard username: " AUTH_USERNAME
+        read -rsp "  Dashboard password: " AUTH_PASSWORD
+        echo ""
+
+        # Patch the env file
+        sed -i "s|^HERMES_DASHBOARD_BASIC_AUTH_USERNAME=.*|HERMES_DASHBOARD_BASIC_AUTH_USERNAME=$AUTH_USERNAME|" "$ENV_FILE"
+        sed -i "s|^HERMES_DASHBOARD_BASIC_AUTH_PASSWORD=.*|HERMES_DASHBOARD_BASIC_AUTH_PASSWORD=$AUTH_PASSWORD|" "$ENV_FILE"
+        sed -i "s|^HERMES_DASHBOARD_BASIC_AUTH_SECRET=.*|HERMES_DASHBOARD_BASIC_AUTH_SECRET=${AUTH_SECRET:-$(openssl rand -hex 32)}|" "$ENV_FILE"
+        sed -i "s|^API_SERVER_KEY=.*|API_SERVER_KEY=${API_KEY:-$(openssl rand -hex 32)}|" "$ENV_FILE"
+
+        echo ""
+        echo "Secrets written to $ENV_FILE"
+    else
+        echo "Dashboard/API secrets already configured in $ENV_FILE"
+    fi
+else
+    echo "No $ENV_FILE found. Generating dashboard/API secrets ..."
+    read -rp "  Dashboard username: " AUTH_USERNAME
+    read -rsp "  Dashboard password: " AUTH_PASSWORD
+    echo ""
+
+    cat > "$ENV_FILE" <<EOF
+HERMES_DASHBOARD_BASIC_AUTH_USERNAME=$AUTH_USERNAME
+HERMES_DASHBOARD_BASIC_AUTH_PASSWORD=$AUTH_PASSWORD
+HERMES_DASHBOARD_BASIC_AUTH_SECRET=$(openssl rand -hex 32)
+API_SERVER_KEY=$(openssl rand -hex 32)
+EOF
+    chmod 600 "$ENV_FILE"
+    echo "Secrets written to $ENV_FILE"
+fi
+
+echo ""
+echo "=== Next steps ==="
+echo "1. Start the hermes-agent service:"
+echo "   sudo systemctl enable --now hermes-agent.service"
+echo ""
+echo "2. If you also need the vLLM model server:"
+echo "   sudo systemctl enable --now vllm-qwen36.service"

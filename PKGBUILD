@@ -15,9 +15,11 @@ source=(
   'vllm-qwen36.container'
   'hermes-agent.container'
   'hermes-agent.env'
+  'hermes-agent-setup'
   'sysusers.local-agents'
 )
 sha256sums=(
+  'SKIP'
   'SKIP'
   'SKIP'
   'SKIP'
@@ -38,5 +40,8 @@ package() {
 
   # Install secrets template (user must fill in before starting)
   install -Dm600 "${srcdir}/hermes-agent.env" "${pkgdir}/etc/local-agents/hermes-agent.env"
+
+  # Install interactive setup helper
+  install -Dm755 "${srcdir}/hermes-agent-setup" "${pkgdir}/usr/bin/hermes-agent-setup"
 }
 

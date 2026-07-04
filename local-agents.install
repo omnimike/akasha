@@ -7,13 +7,12 @@ post_install() {
   systemctl daemon-reload
 
   echo ""
-  echo "=== hermes-agent: set your secrets in /etc/local-agents/hermes-agent.env ==="
-  echo "The service will not work until you configure:"
-  echo "  HERMES_DASHBOARD_BASIC_AUTH_USERNAME"
-  echo "  HERMES_DASHBOARD_BASIC_AUTH_PASSWORD"
-  echo "  HERMES_DASHBOARD_BASIC_AUTH_SECRET"
-  echo "  API_SERVER_KEY"
-  echo "Generate keys with: openssl rand -hex 32"
+  echo "=== hermes-agent: run the setup wizard ==="
+  echo "sudo hermes-agent-setup"
+  echo "This will:"
+  echo "  - Pull the hermes-agent image"
+  echo "  - Run the interactive setup wizard (API keys, chat systems)"
+  echo "  - Generate dashboard/API secrets"
 }
 
 post_upgrade() {
