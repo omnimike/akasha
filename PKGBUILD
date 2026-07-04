@@ -10,6 +10,7 @@ depends=(
   'nvidia-container-toolkit'
   'systemd'
 )
+backup=('etc/local-agents/hermes-agent.env')
 install=local-agents.install
 source=(
   'vllm-qwen36.container'
