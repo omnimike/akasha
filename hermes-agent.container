@@ -8,6 +8,9 @@ Image=docker.io/nousresearch/hermes-agent:latest
 Network=host
 ContainerName=hermes-agent
 
+# Run as non-root hermes user (UID 10000, built into the image)
+User=10000:0
+
 # Data volume
 Volume=/var/lib/local-agents/hermes:/opt/data
 

@@ -33,6 +33,7 @@ post_remove() {
 
   echo "=== Removing system users ==="
   userdel vllm || true
+  userdel hermes || true
 
   echo "=== Reloading systemd manager configuration ==="
   systemctl daemon-reload
