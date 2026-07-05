@@ -1,7 +1,7 @@
 #!/bin/bash
 # hermes-agent-setup — interactive setup wizard for hermes-agent.
-# Pulls the image, runs the setup wizard, and writes secrets to the volume.
-# After setup, edit /etc/local-agents/hermes-agent.env to configure dashboard/API keys.
+# Pulls the image, runs the setup wizard, and writes secrets.
+# Agent source extraction is now handled by hermes-webui.service ExecStartPre.
 
 set -euo pipefail
 
@@ -96,9 +96,12 @@ systemctl start hermes-agent.service
 
 if systemctl is-active --quiet hermes-agent.service; then
     echo "hermes-agent is running."
+    echo "hermes-webui.service will copy agent source via ExecStartPre on next start."
     echo ""
     echo "=== Next steps ==="
     echo "- Access the dashboard at http://localhost:9119"
+    echo "- Start WebUI: systemctl start hermes-webui.service"
+    echo "- Access the WebUI at http://localhost:8787"
     echo "- Check logs: journalctl -u hermes-agent -f"
 else
     echo "hermes-agent failed to start. Check logs:"

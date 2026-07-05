@@ -39,7 +39,7 @@ This creates `vllm-qwen36.service` via Quadlet, pulling the `vllm/vllm-openai:la
 
 All commit message titles must be prefixed with the subsystem they affect:
 
-- `[vllm]` — changes to `vllm-qwen36.container` or vLLM-specific configuration
-- `[hermes]` — changes to `hermes-agent.container` or hermes-specific configuration
+- `[vllm]` — changes primarily affecting `vllm-qwen36.container` or vLLM-specific configuration (use even if other files are changed)
+- `[hermes]` — changes primarily affecting `hermes-agent.container` or hermes-specific configuration (use even if other files are changed)
 - `[pkg]` — changes to `PKGBUILD`, `local-agents.install`, `Makefile`, or other packaging files
-- `[]` — changes affecting multiple subsystems or shared infrastructure
+- `[...]` — changes spanning multiple subsystems with no clear primary focus

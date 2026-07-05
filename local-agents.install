@@ -3,16 +3,17 @@ post_install() {
   systemd-sysusers
 
   echo "=== Reloading systemd manager configuration ==="
-  systemctl enable vllm-qwen36.service hermes-agent.service
+  systemctl enable vllm-qwen36.service hermes-agent.service hermes-webui.service
   systemctl daemon-reload
 
   echo ""
   echo "=== hermes-agent: run the setup wizard first ==="
   echo "sudo hermes-agent-setup"
   echo "This will:"
-  echo "  - Pull the hermes-agent image"
+  echo "  - Pull the hermes-agent and webui images"
   echo "  - Run the interactive setup wizard (API keys, chat systems)"
   echo "  - Generate dashboard/API secrets"
+  echo "  - Extract agent source for the WebUI"
 }
 
 post_upgrade() {
@@ -21,11 +22,12 @@ post_upgrade() {
 
 post_remove() {
   echo "=== Stopping services ==="
-  systemctl disable --now vllm-qwen36.service hermes-agent.service || true
+  systemctl disable --now vllm-qwen36.service hermes-agent.service hermes-webui.service || true
 
   echo "=== Removing podman images ==="
   podman rmi docker.io/vllm/vllm-openai:latest || true
   podman rmi docker.io/nousresearch/hermes-agent:latest || true
+  podman rmi ghcr.io/nesquena/hermes-webui:latest || true
 
   echo "=== Deleting local data in /var/lib/${pkgname} ==="
   rm -rf /var/lib/local-agents

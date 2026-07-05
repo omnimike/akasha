@@ -1,0 +1,37 @@
+[Unit]
+Description=Hermes WebUI
+After=network-online.target hermes-agent.service
+Wants=network-online.target hermes-agent.service
+
+[Container]
+Image=ghcr.io/nesquena/hermes-webui:latest
+Network=host
+ContainerName=hermes-webui
+
+# Hermes data files
+Volume=/var/lib/local-agents/hermes:/home/hermeswebui/.hermes
+# Agent source for dependency installation (read-only)
+Volume=/var/lib/local-agents/hermes-agent-src:/home/hermeswebui/.hermes/hermes-agent:ro
+# Shared workspace for file browsing/editing
+Volume=/var/lib/local-agents/workspace:/workspace
+
+Environment=HERMES_WEBUI_HOST=0.0.0.0
+Environment=HERMES_WEBUI_PORT=8787
+Environment=HERMES_WEBUI_STATE_DIR=/home/hermeswebui/.hermes/webui
+Environment=HERMES_API_URL=http://localhost:8642
+Environment=WANTED_UID=10000
+Environment=WANTED_GID=0
+
+# Secrets (username, password, dashboard secret, API key)
+EnvironmentFile=/etc/local-agents/hermes-agent.env
+
+[Service]
+TimeoutStartSec=infinity
+Restart=on-failure
+RestartSec=30
+
+# Copy agent source from hermes-agent container to host volume before starting
+ExecStartPre=/usr/bin/bash -c 'podman exec hermes-agent tar cf - -C /opt/hermes . | tar xf - -C /var/lib/local-agents/hermes-agent-src'
+
+[Install]
+WantedBy=multi-user.target
