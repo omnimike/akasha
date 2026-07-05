@@ -21,6 +21,8 @@ Environment=HERMES_WEBUI_STATE_DIR=/home/hermeswebui/.hermes/webui
 Environment=HERMES_API_URL=http://localhost:8642
 Environment=WANTED_UID=10000
 Environment=WANTED_GID=0
+Environment=HERMES_WEBUI_CHAT_BACKEND=gateway
+Environment=HERMES_WEBUI_GATEWAY_BASE_URL=http://127.0.0.1:8642
 
 # Secrets (username, password, dashboard secret, API key)
 EnvironmentFile=/etc/local-agents/hermes-agent.env

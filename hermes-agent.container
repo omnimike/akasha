@@ -1,6 +1,6 @@
 [Unit]
 Description=Hermes Agent gateway
-After=network-online.target vllm-qwen36.service multi-user.target
+After=network-online.target vllm-qwen36.service
 Wants=network-online.target vllm-qwen36.service
 
 [Container]
