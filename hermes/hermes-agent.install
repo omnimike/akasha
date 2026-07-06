@@ -3,7 +3,6 @@ post_install() {
   systemd-sysusers
 
   echo "=== Reloading systemd manager configuration ==="
-  systemctl enable hermes-agent.service hermes-webui.service
   systemctl daemon-reload
 
   echo ""
@@ -14,6 +13,8 @@ post_install() {
   echo "  - Run the interactive setup wizard (API keys, chat systems)"
   echo "  - Generate dashboard/API secrets"
   echo "  - Extract agent source for the WebUI"
+  echo "Then enable the service:"
+  echo "  systemctl enable --now hermes-agent.service hermes-webui.service"
 }
 
 post_upgrade() {
