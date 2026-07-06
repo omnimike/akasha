@@ -9,10 +9,11 @@ Network=host
 ContainerName=hermes-agent
 
 # Run as non-root hermes user (UID 10000, built into the image)
-User=10000:0
+User=10000:10000
 
 # Data volume
 Volume=/var/lib/local-agents/hermes:/opt/data
+Volume=/var/lib/local-agents/workspace:/opt/data/workspace
 
 # Enable API server and dashboard
 Environment=API_SERVER_ENABLED=true

@@ -40,9 +40,9 @@ package() {
 
   # Create data directories
   install -d -m 2755 -o 2000 -g 0 "${pkgdir}/var/lib/${pkgname}/vllm"
-  install -d -m 700 -o 10000 -g 0 "${pkgdir}/var/lib/${pkgname}/hermes"
-  install -d -m 755 -o 10000 -g 0 "${pkgdir}/var/lib/${pkgname}/hermes-agent-src"
-  install -d -m 755 -o 10000 -g 0 "${pkgdir}/var/lib/${pkgname}/workspace"
+  install -d -m 700 -o 10000 -g 10000 "${pkgdir}/var/lib/${pkgname}/hermes"
+  install -d -m 755 -o 10000 -g 10000 "${pkgdir}/var/lib/${pkgname}/hermes-agent-src"
+  install -d -m 2755 -o 10000 -g 10000 "${pkgdir}/var/lib/${pkgname}/workspace"
 
   # Install secrets template (user must fill in before starting)
   install -Dm644 "${srcdir}/hermes-agent.env" "${pkgdir}/etc/local-agents/hermes-agent.env"

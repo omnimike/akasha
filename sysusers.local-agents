@@ -1,3 +1,6 @@
+# A group to own workspace files that other users can belong to
+g agent 10000
+
 # Matches the container's built-in user (UID 2000, primary group root GID 0)
 u vllm 2000:0 "vLLM user" /home/vllm
 

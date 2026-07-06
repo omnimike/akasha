@@ -29,12 +29,26 @@ post_remove() {
   podman rmi docker.io/nousresearch/hermes-agent:latest || true
   podman rmi ghcr.io/nesquena/hermes-webui:latest || true
 
-  echo "=== Deleting local data in /var/lib/${pkgname} ==="
-  rm -rf /var/lib/local-agents
+  echo "=== Removing managed data in /var/lib/${pkgname} ==="
+  rm -rf /var/lib/local-agents/vllm
+  rm -rf /var/lib/local-agents/hermes
+  rm -rf /var/lib/local-agents/hermes-agent-src
+
+  echo "=== Removing workspace (if empty) ==="
+  workspace_empty=false
+  if [ -d /var/lib/local-agents/workspace ]; then
+    if rmdir /var/lib/local-agents/workspace 2>/dev/null; then
+      workspace_empty=true
+      rmdir /var/lib/local-agents 2>/dev/null || true
+    fi
+  fi
 
   echo "=== Removing system users ==="
   userdel vllm || true
   userdel hermes || true
+  if [ "$workspace_empty" = true ]; then
+    groupdel agent || true
+  fi
 
   echo "=== Reloading systemd manager configuration ==="
   systemctl daemon-reload
