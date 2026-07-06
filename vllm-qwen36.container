@@ -1,6 +1,6 @@
 [Unit]
 Description=vLLM Qwen3.6-27B-FP8 server
-After=network-online.target nvidia-persistenced.service multi-user.target
+After=network-online.target nvidia-persistenced.service
 Wants=network-online.target nvidia-persistenced.service
 
 [Container]
