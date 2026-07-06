@@ -1,7 +1,7 @@
 [Unit]
 Description=Hermes Agent gateway
-After=network-online.target vllm-qwen36.service
-Wants=network-online.target vllm-qwen36.service
+After=network-online.target
+Wants=network-online.target
 
 [Container]
 Image=docker.io/nousresearch/hermes-agent:latest
@@ -12,8 +12,8 @@ ContainerName=hermes-agent
 User=10000:10000
 
 # Data volume
-Volume=/var/lib/local-agents/hermes:/opt/data
-Volume=/var/lib/local-agents/workspace:/opt/data/workspace
+Volume=/var/lib/hermes-agent/hermes:/opt/data
+Volume=/var/lib/hermes-agent/workspace:/opt/data/workspace
 
 # Enable API server and dashboard
 Environment=API_SERVER_ENABLED=true
@@ -21,7 +21,7 @@ Environment=API_SERVER_HOST=0.0.0.0
 Environment=HERMES_DASHBOARD=1
 
 # Secrets (username, password, dashboard secret, API key)
-EnvironmentFile=/etc/local-agents/hermes-agent.env
+EnvironmentFile=/etc/hermes-agent/hermes-agent.env
 
 # Command
 Exec=gateway run

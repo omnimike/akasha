@@ -3,7 +3,7 @@ post_install() {
   systemd-sysusers
 
   echo "=== Reloading systemd manager configuration ==="
-  systemctl enable vllm-qwen36.service hermes-agent.service hermes-webui.service
+  systemctl enable hermes-agent.service hermes-webui.service
   systemctl daemon-reload
 
   echo ""
@@ -22,29 +22,26 @@ post_upgrade() {
 
 post_remove() {
   echo "=== Stopping services ==="
-  systemctl disable --now vllm-qwen36.service hermes-agent.service hermes-webui.service || true
+  systemctl disable --now hermes-agent.service hermes-webui.service || true
 
   echo "=== Removing podman images ==="
-  podman rmi docker.io/vllm/vllm-openai:latest || true
   podman rmi docker.io/nousresearch/hermes-agent:latest || true
   podman rmi ghcr.io/nesquena/hermes-webui:latest || true
 
-  echo "=== Removing managed data in /var/lib/${pkgname} ==="
-  rm -rf /var/lib/local-agents/vllm
-  rm -rf /var/lib/local-agents/hermes
-  rm -rf /var/lib/local-agents/hermes-agent-src
+  echo "=== Removing managed data in /var/lib/hermes-agent ==="
+  rm -rf /var/lib/hermes-agent/hermes
+  rm -rf /var/lib/hermes-agent/hermes-agent-src
 
   echo "=== Removing workspace (if empty) ==="
   workspace_empty=false
-  if [ -d /var/lib/local-agents/workspace ]; then
-    if rmdir /var/lib/local-agents/workspace 2>/dev/null; then
+  if [ -d /var/lib/hermes-agent/workspace ]; then
+    if rmdir /var/lib/hermes-agent/workspace 2>/dev/null; then
       workspace_empty=true
-      rmdir /var/lib/local-agents 2>/dev/null || true
+      rmdir /var/lib/hermes-agent 2>/dev/null || true
     fi
   fi
 
   echo "=== Removing system users ==="
-  userdel vllm || true
   userdel hermes || true
   if [ "$workspace_empty" = true ]; then
     groupdel agent || true

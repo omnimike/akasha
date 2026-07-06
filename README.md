@@ -1,48 +1,26 @@
 # local-agents
 
-A Pacman package for running local LLM inference servers on Arch Linux, managed by systemd via Podman Quadlets.
+Pacman packages for running local LLM inference servers and agents on Arch Linux, managed by systemd via Podman Quadlets.
 
-## What's Inside
+This repository is split into two packages:
+1. **[vllm-qwen36](file:///home/michael/code/local-agents/vllm)** — runs `vllm/vllm-openai` container for `Qwen3.6-27B-FP8` on port 8000.
+2. **[hermes-agent](file:///home/michael/code/local-agents/hermes)** — runs `nousresearch/hermes-agent` gateway and `hermes-webui` dashboard.
 
-- **vllm-qwen36** — vLLM server running `Qwen3.6-27B-FP8` with MTP speculative decoding and prefix caching, exposed on port `8000` (OpenAI-compatible API).
-
-## Requirements
-
-- Arch Linux
-- `podman`
-- `nvidia-container-toolkit` (for GPU access)
+See [AGENTS.md](file:///home/michael/code/local-agents/AGENTS.md) for detailed package configuration, requirements, and design.
 
 ## Installation
 
+### vLLM Server
 ```bash
+cd vllm
 make install
+sudo systemctl enable --now vllm-qwen36.service
 ```
 
-## Usage
-
-The vLLM server starts as a systemd service and is available at `http://localhost:8000`. It speaks the OpenAI API, so you can use any OpenAI-compatible client:
-
+### Hermes Agent Gateway & WebUI
 ```bash
-curl http://localhost:8000/v1/models
+cd hermes
+make install
+sudo hermes-agent-setup
+sudo systemctl enable --now hermes-agent.service hermes-webui.service
 ```
-
-## Adding a New Model/Container
-
-1. Create a `<name>.container` Quadlet file.
-2. List the file in `source=` in the `PKGBUILD`.
-
-## Model Cache
-
-Models are cached at `/var/lib/local-agents`, which is mounted as `/root/.cache/huggingface` inside the container.
-
-## Uninstall
-
-```bash
-make uninstall
-```
-
-**Warning:** This is destructive — it removes the podman image and deletes all cached models in `/var/lib/local-agents`.
-
-## License
-
-MIT

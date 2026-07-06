@@ -1,6 +1,6 @@
 .PHONY: all build install uninstall clean help
 
-PKG_NAME = local-agents
+PKG_NAME = vllm-qwen36
 
 all: build
 
@@ -23,9 +23,9 @@ clean:
 
 help:
 	@echo "Usage:"
-	@echo "  make            Build the local-agents package"
-	@echo "  make build      Build the local-agents package"
-	@echo "  make install    Build and install the local-agents package natively via pacman"
-	@echo "  make uninstall  Remove the local-agents package from the system"
+	@echo "  make            Build the vllm-qwen36 package"
+	@echo "  make build      Build the vllm-qwen36 package"
+	@echo "  make install    Build and install the vllm-qwen36 package natively via pacman"
+	@echo "  make uninstall  Remove the vllm-qwen36 package from the system"
 	@echo "  make clean      Clean up generated build artifacts and package archives"
 	@echo "  make help       Show this help message"

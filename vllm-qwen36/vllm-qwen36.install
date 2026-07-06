@@ -1,0 +1,29 @@
+post_install() {
+  echo "=== Creating system users ==="
+  systemd-sysusers
+
+  echo "=== Reloading systemd manager configuration ==="
+  systemctl enable vllm-qwen36.service
+  systemctl daemon-reload
+}
+
+post_upgrade() {
+  post_install "$@"
+}
+
+post_remove() {
+  echo "=== Stopping services ==="
+  systemctl disable --now vllm-qwen36.service || true
+
+  echo "=== Removing podman images ==="
+  podman rmi docker.io/vllm/vllm-openai:latest || true
+
+  echo "=== Removing managed data in /var/lib/vllm-qwen36 ==="
+  rm -rf /var/lib/vllm-qwen36
+
+  echo "=== Removing system users ==="
+  userdel vllm || true
+
+  echo "=== Reloading systemd manager configuration ==="
+  systemctl daemon-reload
+}

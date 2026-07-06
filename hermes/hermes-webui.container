@@ -9,11 +9,11 @@ Network=host
 ContainerName=hermes-webui
 
 # Hermes data files
-Volume=/var/lib/local-agents/hermes:/home/hermeswebui/.hermes
+Volume=/var/lib/hermes-agent/hermes:/home/hermeswebui/.hermes
 # Agent source for dependency installation (read-only)
-Volume=/var/lib/local-agents/hermes-agent-src:/home/hermeswebui/.hermes/hermes-agent:ro
+Volume=/var/lib/hermes-agent/hermes-agent-src:/home/hermeswebui/.hermes/hermes-agent:ro
 # Shared workspace for file browsing/editing
-Volume=/var/lib/local-agents/workspace:/workspace
+Volume=/var/lib/hermes-agent/workspace:/workspace
 
 Environment=HERMES_WEBUI_HOST=0.0.0.0
 Environment=HERMES_WEBUI_PORT=8787
@@ -25,7 +25,7 @@ Environment=HERMES_WEBUI_CHAT_BACKEND=gateway
 Environment=HERMES_WEBUI_GATEWAY_BASE_URL=http://127.0.0.1:8642
 
 # Secrets (username, password, dashboard secret, API key)
-EnvironmentFile=/etc/local-agents/hermes-agent.env
+EnvironmentFile=/etc/hermes-agent/hermes-agent.env
 
 [Service]
 TimeoutStartSec=infinity
@@ -33,7 +33,7 @@ Restart=on-failure
 RestartSec=30
 
 # Copy agent source from hermes-agent container to host volume before starting
-ExecStartPre=/usr/bin/bash -c 'podman exec hermes-agent tar cf - -C /opt/hermes . | tar xf - -C /var/lib/local-agents/hermes-agent-src'
+ExecStartPre=/usr/bin/bash -c 'podman exec hermes-agent tar cf - -C /opt/hermes . | tar xf - -C /var/lib/hermes-agent/hermes-agent-src'
 
 [Install]
 WantedBy=multi-user.target

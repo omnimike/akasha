@@ -1,8 +1,5 @@
 # A group to own workspace files that other users can belong to
 g agent 10000
 
-# Matches the container's built-in user (UID 2000, primary group root GID 0)
-u vllm 2000:0 "vLLM user" /home/vllm
-
 # Matches the hermes-agent container's built-in user (UID 10000, primary group root GID 0)
 u hermes 10000:0 "Hermes Agent user" /home/hermes

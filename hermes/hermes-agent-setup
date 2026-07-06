@@ -6,14 +6,14 @@
 set -euo pipefail
 
 IMAGE="docker.io/nousresearch/hermes-agent:latest"
-DATA_DIR="/var/lib/local-agents/hermes"
-ENV_FILE="/etc/local-agents/hermes-agent.env"
+DATA_DIR="/var/lib/hermes-agent/hermes"
+ENV_FILE="/etc/hermes-agent/hermes-agent.env"
 
 echo "=== Hermes Agent Setup ==="
 
 if [ ! -d "$DATA_DIR" ]; then
     echo "Data directory $DATA_DIR does not exist."
-    echo "Installing the local-agents package creates it. Run: sudo make install"
+    echo "Installing the hermes-agent package creates it. Run: sudo make install"
     exit 1
 fi
 
