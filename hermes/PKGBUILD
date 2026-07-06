@@ -16,9 +16,11 @@ source=(
   'hermes-webui.container'
   'hermes-agent.env'
   'hermes-agent-setup'
+  'hermes'
   'sysusers.hermes-agent'
 )
 sha256sums=(
+  'SKIP'
   'SKIP'
   'SKIP'
   'SKIP'
@@ -44,4 +46,7 @@ package() {
 
   # Install interactive setup helper
   install -Dm755 "${srcdir}/hermes-agent-setup" "${pkgdir}/usr/bin/hermes-agent-setup"
+
+  # Install the hermes CLI wrapper
+  install -Dm755 "${srcdir}/hermes" "${pkgdir}/usr/bin/hermes"
 }

@@ -1,0 +1,14 @@
+#!/bin/bash
+# hermes — run the hermes CLI inside the hermes-agent container.
+
+set -euo pipefail
+
+CONTAINER=hermes-agent
+
+if ! sudo podman container inspect "$CONTAINER" &>/dev/null; then
+    echo "Error: $CONTAINER is not running." >&2
+    echo "Start it with: systemctl start hermes-agent.service" >&2
+    exit 1
+fi
+
+exec sudo podman exec -it "$CONTAINER" hermes "$@"
