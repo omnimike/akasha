@@ -3,8 +3,9 @@ post_install() {
   systemd-sysusers
 
   echo "=== Reloading systemd manager configuration ==="
-  systemctl enable vllm-qwen36.service
   systemctl daemon-reload
+
+  echo "start with systemctl enable --now vllm-qwen36.service"
 }
 
 post_upgrade() {
