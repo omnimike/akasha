@@ -35,6 +35,10 @@ Exec=--model Qwen/Qwen3.6-27B-FP8 \
      --max-num-seqs 32
 
 [Service]
+# For some reason this doesn't always generate correctly when the server starts
+# up (particularly when swapping between graphical and multi-user modes).
+ExecStartPre=/usr/bin/nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml
+
 TimeoutStartSec=infinity
 Restart=on-failure
 RestartSec=30
