@@ -4,5 +4,5 @@ Repository containing Arch Linux packages that install systemd Quadlet files to 
 
 The repository is split into two packages:
 
-- `vllm-qwen36` — builds the `vllm-qwen36` package for the vLLM inference server.
+- `vllm-qwen3` — builds the `vllm-qwen3` package for the vLLM inference server.
 - `hermes` — builds the `hermes-agent` package for the Hermes agent gateway and WebUI dashboard.

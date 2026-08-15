@@ -1,8 +1,8 @@
 # Maintainer: Michael F <michael.fulthorp@gmail.com>
-pkgname=vllm-qwen36
+pkgname=vllm-qwen3
 pkgver=0.0.1
 pkgrel=1
-pkgdesc="Local vLLM Qwen3.6 server running on my home server"
+pkgdesc="Local vLLM Qwen3.8 server running on my home server"
 arch=('x86_64')
 license=('MIT')
 depends=(
@@ -10,10 +10,10 @@ depends=(
   'nvidia-container-toolkit'
   'systemd'
 )
-install=vllm-qwen36.install
+install=vllm-qwen3.install
 source=(
-  'vllm-qwen36.container'
-  'sysusers.vllm-qwen36'
+  'vllm-qwen3.container'
+  'sysusers.vllm-qwen3'
 )
 sha256sums=(
   'SKIP'
@@ -22,10 +22,10 @@ sha256sums=(
 
 package() {
   # Install the Quadlet container files
-  install -Dm644 "${srcdir}/vllm-qwen36.container" "${pkgdir}/usr/share/containers/systemd/vllm-qwen36.container"
+  install -Dm644 "${srcdir}/vllm-qwen3.container" "${pkgdir}/usr/share/containers/systemd/vllm-qwen3.container"
 
   # Install sysusers file for the vllm user
-  install -Dm644 "${srcdir}/sysusers.vllm-qwen36" "${pkgdir}/usr/lib/sysusers.d/vllm-qwen36.conf"
+  install -Dm644 "${srcdir}/sysusers.vllm-qwen3" "${pkgdir}/usr/lib/sysusers.d/vllm-qwen3.conf"
 
   # Create data directories
   install -d -m 755 -o 2000 -g 0 "${pkgdir}/var/lib/${pkgname}"
