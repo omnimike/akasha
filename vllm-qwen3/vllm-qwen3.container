@@ -24,7 +24,7 @@ Environment=VLLM_USE_DEEP_GEMM=0
 # Environment=DO_NOT_TRACK=1
 
 # Command line arguments
-Exec=--model Qwen/Qwen3.8-27B \
+Exec=--model Qwen/Qwen3.8-27B-FP8 \
      --max-model-len 262144 \
      --tensor-parallel-size 1 \
      --enable-prefix-caching \
