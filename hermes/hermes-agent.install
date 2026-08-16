@@ -7,7 +7,7 @@ post_install() {
 
   echo ""
   echo "=== hermes-agent: run the setup wizard first ==="
-  echo "sudo hermes-agent-setup"
+  echo "sudo hermes install"
   echo "This will:"
   echo "  - Build the custom hermes-agent image"
   echo "  - Run the interactive setup wizard (API keys, chat systems)"

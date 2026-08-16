@@ -21,6 +21,6 @@ sudo systemctl enable --now vllm-qwen3.service
 ```bash
 cd hermes
 make install
-sudo hermes-agent-setup
+sudo hermes install
 sudo systemctl enable --now hermes-agent.service hermes-webui.service
 ```

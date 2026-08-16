@@ -4,7 +4,7 @@
 # The resulting image must keep:
 #   - A user with UID 10000 / GID 10000 (the container runs User=10000:10000)
 #   - The `hermes` CLI entrypoint (the /usr/bin/hermes wrapper execs it)
-#   - The `setup` subcommand (used by the hermes-agent-setup wizard)
+#   - The `setup` subcommand (used by the `hermes install` wizard)
 #   - Agent source at /opt/hermes (hermes-webui copies it out at start)
 #   - Support for the API_SERVER_ENABLED / API_SERVER_HOST / HERMES_DASHBOARD env vars
 

@@ -11,23 +11,22 @@ Arch package that installs systemd Quadlet files to run the Hermes agent gateway
 - `Containerfile` — Containerfile build context for the custom hermes-agent image (installed to `/usr/share/hermes-agent/build/`)
 - `hermes-webui.container` — Podman Quadlet for hermes-webui dashboard
 - `hermes-agent.env` — secret template file
-- `hermes-agent-setup` — interactive wizard for hermes setup
-- `hermes` — CLI wrapper script to exec into the hermes-agent container
+- `hermes` — CLI wrapper: `hermes install` installs the agent (secrets, service start), any other invocation execs the hermes CLI inside the hermes-agent container
 - `hermes-agent.install` — pacman hooks: `daemon-reload` on install/upgrade, cleanup on remove
 - `sysusers.hermes-agent` — systemd-sysusers config for the non-root `hermes` user and `agent` group
 
 ## How it runs
 
-Navigate to `hermes/` and run `make install`. Then, run the interactive setup wizard:
+Navigate to `hermes/` and run `make install`. Then:
 
 ```bash
-sudo hermes-agent-setup
+sudo hermes install
 ```
 
-This builds the custom hermes-agent image and initializes configuration files. Afterward, start the services:
+This initializes configuration files and starts the services. Afterward, run the interactive setup wizard:
 
 ```bash
-sudo systemctl enable --now hermes-agent.service hermes-webui.service
+hermes setup
 ```
 
 ## Key details

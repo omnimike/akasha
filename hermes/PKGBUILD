@@ -1,7 +1,7 @@
 # Maintainer: Michael F <michael.fulthorp@gmail.com>
 pkgname=hermes-agent
 pkgver=0.0.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Hermes Agent gateway with API server and dashboard"
 arch=('x86_64')
 license=('MIT')
@@ -17,12 +17,10 @@ source=(
   'Containerfile'
   'hermes-webui.container'
   'hermes-agent.env'
-  'hermes-agent-setup'
   'hermes'
   'sysusers.hermes-agent'
 )
 sha256sums=(
-  'SKIP'
   'SKIP'
   'SKIP'
   'SKIP'
@@ -52,9 +50,6 @@ package() {
   # Install secrets template (user must fill in before starting)
   install -Dm644 "${srcdir}/hermes-agent.env" "${pkgdir}/etc/${pkgname}/hermes-agent.env"
 
-  # Install interactive setup helper
-  install -Dm755 "${srcdir}/hermes-agent-setup" "${pkgdir}/usr/bin/hermes-agent-setup"
-
-  # Install the hermes CLI wrapper
+  # Install the hermes CLI wrapper (includes `hermes install` setup wizard)
   install -Dm755 "${srcdir}/hermes" "${pkgdir}/usr/bin/hermes"
 }
