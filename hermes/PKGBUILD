@@ -13,6 +13,8 @@ backup=('etc/hermes-agent/hermes-agent.env')
 install=hermes-agent.install
 source=(
   'hermes-agent.container'
+  'hermes-agent.build'
+  'Containerfile'
   'hermes-webui.container'
   'hermes-agent.env'
   'hermes-agent-setup'
@@ -26,12 +28,18 @@ sha256sums=(
   'SKIP'
   'SKIP'
   'SKIP'
+  'SKIP'
+  'SKIP'
 )
 
 package() {
-  # Install the Quadlet container files
+  # Install the Quadlet container and build units
   install -Dm644 "${srcdir}/hermes-agent.container" "${pkgdir}/usr/share/containers/systemd/hermes-agent.container"
   install -Dm644 "${srcdir}/hermes-webui.container" "${pkgdir}/usr/share/containers/systemd/hermes-webui.container"
+  install -Dm644 "${srcdir}/hermes-agent.build" "${pkgdir}/usr/share/containers/systemd/hermes-agent.build"
+
+  # Install the Containerfile build context for the hermes-agent image
+  install -Dm644 "${srcdir}/Containerfile" "${pkgdir}/usr/share/hermes-agent/build/Containerfile"
 
   # Install sysusers file for the hermes user and agent group
   install -Dm644 "${srcdir}/sysusers.hermes-agent" "${pkgdir}/usr/lib/sysusers.d/hermes-agent.conf"

@@ -1,0 +1,12 @@
+[Unit]
+Description=Build hermes-agent image
+Wants=network-online.target
+After=network-online.target
+
+[Build]
+ImageTag=localhost/hermes-agent:latest
+File=Containerfile
+SetWorkingDirectory=/usr/share/hermes-agent/build
+
+[Install]
+WantedBy=multi-user.target

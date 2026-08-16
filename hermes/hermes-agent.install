@@ -9,7 +9,7 @@ post_install() {
   echo "=== hermes-agent: run the setup wizard first ==="
   echo "sudo hermes-agent-setup"
   echo "This will:"
-  echo "  - Pull the hermes-agent and webui images"
+  echo "  - Build the custom hermes-agent image"
   echo "  - Run the interactive setup wizard (API keys, chat systems)"
   echo "  - Generate dashboard/API secrets"
   echo "  - Extract agent source for the WebUI"
@@ -19,14 +19,22 @@ post_install() {
 
 post_upgrade() {
   post_install "$@"
+
+  echo "=== Rebuilding hermes-agent image ==="
+  systemctl restart hermes-agent-build.service || true
+
+  if systemctl is-active --quiet hermes-agent.service; then
+    echo "=== Restarting hermes-agent ==="
+    systemctl restart hermes-agent.service || true
+  fi
 }
 
 post_remove() {
   echo "=== Stopping services ==="
-  systemctl disable --now hermes-agent.service hermes-webui.service || true
+  systemctl disable --now hermes-agent-build.service hermes-agent.service hermes-webui.service || true
 
   echo "=== Removing podman images ==="
-  podman rmi docker.io/nousresearch/hermes-agent:latest || true
+  podman rmi localhost/hermes-agent:latest || true
   podman rmi ghcr.io/nesquena/hermes-webui:latest || true
 
   echo "=== Removing managed data in /var/lib/hermes-agent ==="

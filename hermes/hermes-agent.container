@@ -1,10 +1,11 @@
 [Unit]
 Description=Hermes Agent gateway
-After=network-online.target
-Wants=network-online.target
+After=network-online.target hermes-agent-build.service
+Wants=network-online.target hermes-agent-build.service
 
 [Container]
-Image=docker.io/nousresearch/hermes-agent:latest
+# Locally built by hermes-agent-build.service (Quadlet .build unit)
+Image=localhost/hermes-agent:latest
 Network=host
 ContainerName=hermes-agent
 

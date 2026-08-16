@@ -1,11 +1,12 @@
 #!/bin/bash
 # hermes-agent-setup — interactive setup wizard for hermes-agent.
-# Pulls the image, runs the setup wizard, and writes secrets.
+# Builds the custom image, runs the setup wizard, and writes secrets.
 # Agent source extraction is now handled by hermes-webui.service ExecStartPre.
 
 set -euo pipefail
 
-IMAGE="docker.io/nousresearch/hermes-agent:latest"
+IMAGE="localhost/hermes-agent:latest"
+BUILD_CONTEXT="/usr/share/hermes-agent/build"
 DATA_DIR="/var/lib/hermes-agent/hermes"
 ENV_FILE="/etc/hermes-agent/hermes-agent.env"
 
@@ -17,10 +18,10 @@ if [ ! -d "$DATA_DIR" ]; then
     exit 1
 fi
 
-# Pull the image if not local
+# Build the custom image if not local
 if ! podman image inspect "$IMAGE" &>/dev/null; then
-    echo "Pulling $IMAGE ..."
-    podman pull --quiet "$IMAGE"
+    echo "Building $IMAGE from $BUILD_CONTEXT ..."
+    podman build -t "$IMAGE" "$BUILD_CONTEXT"
 fi
 
 echo ""
