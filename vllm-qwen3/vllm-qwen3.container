@@ -32,9 +32,12 @@ Exec=--model Qwen/Qwen3.8-27B-FP8 \
      --tool-call-parser qwen3_coder \
      --reasoning-parser qwen3 \
      --gpu-memory-utilization 0.9 \
-     --kv-cache-dtype auto \
+     --kv-cache-dtype fp8 \
      --max-num-seqs 256 \
-     --speculative-config '{"method": "mtp", "num_speculative_tokens": 2}' \
+     --max-num-batched-tokens 16384 \
+     --async-scheduling \
+     --gdn-prefill-backend flashinfer \
+     --speculative-config '{"method": "mtp", "num_speculative_tokens": 3}' \
      --default-chat-template-kwargs '{"reasoning_effort": "xhigh", "preserve_thinking": true}'
 
 [Service]
