@@ -2,6 +2,9 @@ post_install() {
   echo "=== Creating system users ==="
   systemd-sysusers
 
+  echo "=== Validating sudoers rule ==="
+  visudo -cf /etc/sudoers.d/hermes-agent
+
   echo "=== Reloading systemd manager configuration ==="
   systemctl daemon-reload
 

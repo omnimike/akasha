@@ -1,0 +1,8 @@
+# Passwordless podman access for the hermes group, scoped to exactly the
+# commands the /usr/bin/hermes CLI wrapper invokes. The hermes-agent
+# container is rootful, so regular users cannot talk to its store directly;
+# this rule lets them run the hermes CLI inside it without a password.
+Cmnd_Alias HERMES_CONTAINER = /usr/bin/podman "^exec -it? hermes-agent hermes( .*)?$", \
+                               /usr/bin/podman "^container inspect hermes-agent$"
+
+%hermes ALL=(root) NOPASSWD: HERMES_CONTAINER

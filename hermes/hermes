@@ -1,13 +1,15 @@
 #!/bin/bash
 # hermes — Hermes CLI wrapper.
-#   hermes install   install (secrets, service start)
-#   hermes [args]    forward to the hermes CLI inside the hermes-agent container.
+#   hermes install   install (secrets, service start)        [requires root]
+#   hermes [args]    forward to the hermes CLI inside the hermes-agent container
+#                    [root, or a member of the hermes group via /etc/sudoers.d/hermes-agent]
 
 set -euo pipefail
 
 CONTAINER=hermes-agent
 DATA_DIR="/var/lib/hermes-agent/hermes"
 ENV_FILE="/etc/hermes-agent/hermes-agent.env"
+GROUP=hermes
 
 if [ "${1:-}" = "install" ]; then
     if [ "$(id -u)" -ne 0 ]; then
@@ -76,6 +78,18 @@ EOF
         echo "Secrets written to $ENV_FILE"
     fi
 
+    # Make sure the installing user can use the CLI without sudo afterwards
+    GROUP_ADDED=false
+    if [ -n "${SUDO_USER:-}" ] && [ "$SUDO_USER" != "root" ]; then
+        if ! id -nG "$SUDO_USER" | tr ' ' '\n' | grep -qx "$GROUP"; then
+            usermod -aG "$GROUP" "$SUDO_USER"
+            GROUP_ADDED=true
+            echo ""
+            echo "Added $SUDO_USER to the $GROUP group."
+            echo "Log out and back in (or run: newgrp $GROUP) so 'hermes' works without sudo."
+        fi
+    fi
+
     echo ""
     echo "=== Starting services ==="
     echo "Starting hermes-agent.service ..."
@@ -100,10 +114,23 @@ EOF
     exit 0
 fi
 
-if ! sudo podman container inspect "$CONTAINER" &>/dev/null; then
-    echo "Error: $CONTAINER is not running." >&2
-    echo "Start it with: systemctl start hermes-agent.service" >&2
+if ! inspect_err=$(sudo -n podman container inspect "$CONTAINER" 2>&1); then
+    case "$inspect_err" in
+        *"a password is required"*)
+            echo "Error: $(id -un) is not allowed to run podman without a password." >&2
+            echo "Join the $GROUP group first:" >&2
+            echo "  sudo usermod -aG $GROUP $(id -un)   (then log out and back in)" >&2
+            ;;
+        *)
+            echo "Error: $CONTAINER is not running." >&2
+            echo "Start it with: systemctl start hermes-agent.service" >&2
+            ;;
+    esac
     exit 1
 fi
 
-exec sudo podman exec -it "$CONTAINER" hermes "$@"
+# Allocate a TTY only when attached to one
+if [ -t 0 ]; then
+    exec sudo -n podman exec -it "$CONTAINER" hermes "$@"
+fi
+exec sudo -n podman exec -i "$CONTAINER" hermes "$@"

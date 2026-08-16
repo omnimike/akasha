@@ -1,7 +1,7 @@
 # Maintainer: Michael F <michael.fulthorp@gmail.com>
 pkgname=hermes-agent
 pkgver=0.0.1
-pkgrel=2
+pkgrel=3
 pkgdesc="Hermes Agent gateway with API server and dashboard"
 arch=('x86_64')
 license=('MIT')
@@ -19,8 +19,10 @@ source=(
   'hermes-agent.env'
   'hermes'
   'sysusers.hermes-agent'
+  'hermes-agent.sudoers'
 )
 sha256sums=(
+  'SKIP'
   'SKIP'
   'SKIP'
   'SKIP'
@@ -52,4 +54,7 @@ package() {
 
   # Install the hermes CLI wrapper (includes `hermes install` setup wizard)
   install -Dm755 "${srcdir}/hermes" "${pkgdir}/usr/bin/hermes"
+
+  # Install the NOPASSWD sudoers rule (scoped to the hermes CLI's podman commands)
+  install -Dm440 "${srcdir}/hermes-agent.sudoers" "${pkgdir}/etc/sudoers.d/hermes-agent"
 }
