@@ -27,7 +27,6 @@ Environment=VLLM_USE_DEEP_GEMM=0
 
 # Command line arguments
 Exec=--model RedHatAI/Muse-Glimmer-30B-FP8-block \
-     --served-model-name muse-glimmer \
      --port 8001 \
      --max-model-len 131072 \
      --tensor-parallel-size 1 \
