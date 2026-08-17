@@ -1,6 +1,6 @@
 # makepkg build artifacts
-/vllm-qwen3/pkg/
-/vllm-qwen3/src/
+/vllm/pkg/
+/vllm/src/
 /hermes/pkg/
 /hermes/src/
 *.pkg.tar*

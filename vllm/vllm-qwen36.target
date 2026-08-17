@@ -1,0 +1,7 @@
+[Unit]
+Description=Start vLLM Qwen/Qwen3.6-27B server at boot
+Wants=vllm-qwen36.service
+After=vllm-qwen36.service
+
+[Install]
+WantedBy=multi-user.target

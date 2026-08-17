@@ -1,0 +1,48 @@
+[Unit]
+Description=vLLM Qwen/Qwen3.8-27B server
+After=network-online.target nvidia-persistenced.service nvidia-cdi.service
+Wants=network-online.target nvidia-persistenced.service
+Requires=nvidia-cdi.service
+PartOf=vllm-qwen38.target
+
+[Container]
+Image=docker.io/vllm/vllm-openai:latest
+Network=host
+ContainerName=vllm-qwen38
+AddDevice=nvidia.com/gpu=all
+PodmanArgs=--ipc=host
+User=2000:0
+Volume=/var/lib/vllm/qwen38:/home/vllm/.cache/huggingface
+
+# Environment variables
+Environment=VLLM_USE_DEEP_GEMM=0
+
+# We are currently downloading the model when the container starts.
+# These environment variables disable that.
+# Environment=HF_HUB_OFFLINE=1
+# Environment=TORCH_HUB_OFFLINE=1
+# Environment=TORCH_DISTRIBUTED_DEBUG=OFF
+# Environment=VLLM_NO_USAGE_STATS=1
+# Environment=DO_NOT_TRACK=1
+
+# Command line arguments
+Exec=--model Qwen/Qwen3.8-27B-FP8 \
+     --max-model-len 262144 \
+     --tensor-parallel-size 1 \
+     --enable-prefix-caching \
+     --enable-auto-tool-choice \
+     --tool-call-parser qwen3_coder \
+     --reasoning-parser qwen3 \
+     --gpu-memory-utilization 0.9 \
+     --kv-cache-dtype fp8 \
+     --max-num-seqs 256 \
+     --max-num-batched-tokens 16384 \
+     --async-scheduling \
+     --gdn-prefill-backend flashinfer \
+     --speculative-config '{"method": "mtp", "num_speculative_tokens": 3}' \
+     --default-chat-template-kwargs '{"reasoning_effort": "xhigh", "preserve_thinking": true}'
+
+[Service]
+TimeoutStartSec=infinity
+Restart=on-failure
+RestartSec=30

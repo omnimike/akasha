@@ -1,0 +1,7 @@
+[Unit]
+Description=Start vLLM Meta Muse-Glimmer-30B server at boot
+Wants=vllm-muse-glimmer.service
+After=vllm-muse-glimmer.service
+
+[Install]
+WantedBy=multi-user.target

@@ -1,6 +1,6 @@
 .PHONY: all build install uninstall clean help
 
-PKG_NAME = vllm-qwen3
+PKG_NAME = vllm
 
 all: build
 
@@ -23,9 +23,9 @@ clean:
 
 help:
 	@echo "Usage:"
-	@echo "  make            Build the vllm-qwen3 package"
-	@echo "  make build      Build the vllm-qwen3 package"
-	@echo "  make install    Build and install the vllm-qwen3 package natively via pacman"
-	@echo "  make uninstall  Remove the vllm-qwen3 package from the system"
+	@echo "  make            Build the vllm package"
+	@echo "  make build      Build the vllm package"
+	@echo "  make install    Build and install the vllm package natively via pacman"
+	@echo "  make uninstall  Remove the vllm package from the system"
 	@echo "  make clean      Clean up generated build artifacts and package archives"
 	@echo "  make help       Show this help message"

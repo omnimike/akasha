@@ -7,7 +7,7 @@ description: Use when creating git commits to ensure proper commit message prefi
 
 All commit message titles must be prefixed with the subsystem they affect:
 
-- `[vllm]` — changes primarily affecting `vllm-qwen3` folder or its packaging
+- `[vllm]` — changes primarily affecting `vllm` folder or its packaging
 - `[hermes]` — changes primarily affecting `hermes` folder or its packaging
 - `[agents]` — changes primarily affecting `AGENTS.md` files or the `.agents` folder
 - `[...]` — changes spanning multiple subsystems with no clear primary focus

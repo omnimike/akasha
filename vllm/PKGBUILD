@@ -1,0 +1,57 @@
+# Maintainer: Michael F <michael.fulthorp@gmail.com>
+pkgname=vllm
+pkgver=0.0.1
+pkgrel=1
+pkgdesc="Local vLLM inference servers (Qwen3.8, Qwen3.6 and Muse-Glimmer-30B) running on my home server"
+arch=('x86_64')
+license=('MIT')
+depends=(
+  'podman'
+  'nvidia-container-toolkit'
+  'systemd'
+)
+install=vllm.install
+source=(
+  'vllm-qwen38.container'
+  'vllm-qwen36.container'
+  'vllm-muse-glimmer.container'
+  'vllm-qwen38.target'
+  'vllm-qwen36.target'
+  'vllm-muse-glimmer.target'
+  'nvidia-cdi.service'
+  'sysusers.vllm'
+)
+sha256sums=(
+  'SKIP'
+  'SKIP'
+  'SKIP'
+  'SKIP'
+  'SKIP'
+  'SKIP'
+  'SKIP'
+  'SKIP'
+)
+
+package() {
+  # Install the Quadlet container files
+  install -Dm644 "${srcdir}/vllm-qwen38.container" "${pkgdir}/usr/share/containers/systemd/vllm-qwen38.container"
+  install -Dm644 "${srcdir}/vllm-qwen36.container" "${pkgdir}/usr/share/containers/systemd/vllm-qwen36.container"
+  install -Dm644 "${srcdir}/vllm-muse-glimmer.container" "${pkgdir}/usr/share/containers/systemd/vllm-muse-glimmer.container"
+
+  # Install the boot-start toggle targets
+  install -Dm644 "${srcdir}/vllm-qwen38.target" "${pkgdir}/usr/lib/systemd/system/vllm-qwen38.target"
+  install -Dm644 "${srcdir}/vllm-qwen36.target" "${pkgdir}/usr/lib/systemd/system/vllm-qwen36.target"
+  install -Dm644 "${srcdir}/vllm-muse-glimmer.target" "${pkgdir}/usr/lib/systemd/system/vllm-muse-glimmer.target"
+
+  # Install the oneshot service that generates the NVIDIA CDI spec the
+  # containers depend on
+  install -Dm644 "${srcdir}/nvidia-cdi.service" "${pkgdir}/usr/lib/systemd/system/nvidia-cdi.service"
+
+  # Install sysusers file for the vllm user
+  install -Dm644 "${srcdir}/sysusers.vllm" "${pkgdir}/usr/lib/sysusers.d/vllm.conf"
+
+  # Create data directories
+  install -d -m 755 -o 2000 -g 0 "${pkgdir}/var/lib/vllm/qwen38"
+  install -d -m 755 -o 2000 -g 0 "${pkgdir}/var/lib/vllm/qwen36"
+  install -d -m 755 -o 2000 -g 0 "${pkgdir}/var/lib/vllm/muse-glimmer"
+}

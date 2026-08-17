@@ -1,16 +1,18 @@
 [Unit]
-Description=vLLM Qwen/Qwen3.8-27B server
-After=network-online.target nvidia-persistenced.service
+Description=vLLM Qwen/Qwen3.6-27B server
+After=network-online.target nvidia-persistenced.service nvidia-cdi.service
 Wants=network-online.target nvidia-persistenced.service
+Requires=nvidia-cdi.service
+PartOf=vllm-qwen36.target
 
 [Container]
 Image=docker.io/vllm/vllm-openai:latest
 Network=host
-ContainerName=vllm-qwen3
+ContainerName=vllm-qwen36
 AddDevice=nvidia.com/gpu=all
 PodmanArgs=--ipc=host
 User=2000:0
-Volume=/var/lib/vllm-qwen3:/home/vllm/.cache/huggingface
+Volume=/var/lib/vllm/qwen36:/home/vllm/.cache/huggingface
 
 # Environment variables
 Environment=VLLM_USE_DEEP_GEMM=0
@@ -24,7 +26,8 @@ Environment=VLLM_USE_DEEP_GEMM=0
 # Environment=DO_NOT_TRACK=1
 
 # Command line arguments
-Exec=--model Qwen/Qwen3.8-27B-FP8 \
+Exec=--model Qwen/Qwen3.6-27B-FP8 \
+     --port 8002 \
      --max-model-len 262144 \
      --tensor-parallel-size 1 \
      --enable-prefix-caching \
@@ -41,13 +44,6 @@ Exec=--model Qwen/Qwen3.8-27B-FP8 \
      --default-chat-template-kwargs '{"reasoning_effort": "xhigh", "preserve_thinking": true}'
 
 [Service]
-# For some reason this doesn't always generate correctly when the server starts
-# up (particularly when swapping between graphical and multi-user modes).
-ExecStartPre=/usr/bin/nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml
-
 TimeoutStartSec=infinity
 Restart=on-failure
 RestartSec=30
-
-[Install]
-WantedBy=multi-user.target
