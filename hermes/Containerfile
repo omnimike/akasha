@@ -10,4 +10,4 @@
 
 FROM docker.io/nousresearch/hermes-agent:latest
 
-# Add local customizations below
+RUN uv pip install --python /opt/hermes/.venv/bin/python3 ddgs
