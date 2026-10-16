@@ -3,6 +3,8 @@
 /vllm/src/
 /hermes/pkg/
 /hermes/src/
+/monitor-power/pkg/
+/monitor-power/src/
 *.pkg.tar*
 *.src.tar.gz
 .opencode

@@ -1,0 +1,27 @@
+# Maintainer: Michael F <michael.fulthorp@gmail.com>
+pkgname=monitor-power
+pkgver=0.0.1
+pkgrel=1
+pkgdesc="Sleep then power down the monitor after inactivity in multi-user mode (system stays running)"
+arch=('any')
+license=('MIT')
+depends=(
+  'systemd'
+  'util-linux'
+)
+install=monitor-power.install
+source=(
+  'monitor-power.target'
+  'monitor-power.service'
+)
+sha256sums=(
+  'SKIP'
+  'SKIP'
+)
+
+package() {
+  # Install the target that toggles monitor power saving at boot and
+  # the oneshot service that programs the kernel console blanking
+  install -Dm644 "${srcdir}/monitor-power.target" "${pkgdir}/usr/lib/systemd/system/monitor-power.target"
+  install -Dm644 "${srcdir}/monitor-power.service" "${pkgdir}/usr/lib/systemd/system/monitor-power.service"
+}

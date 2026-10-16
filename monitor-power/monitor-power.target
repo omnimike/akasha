@@ -1,0 +1,7 @@
+[Unit]
+Description=Sleep then power down the monitor after inactivity in multi-user mode (system stays running)
+Wants=monitor-power.service
+After=monitor-power.service
+
+[Install]
+WantedBy=multi-user.target

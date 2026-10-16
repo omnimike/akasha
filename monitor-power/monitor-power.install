@@ -1,0 +1,24 @@
+post_install() {
+  echo "=== Reloading systemd manager configuration ==="
+  systemctl daemon-reload
+
+  echo "monitor power saving does not start at boot by default and never powers off the system"
+  echo "  enable at boot with systemctl enable --now monitor-power.target"
+  echo "  disable with systemctl disable --now monitor-power.target (also wakes the monitor)"
+}
+
+post_upgrade() {
+  post_install "$@"
+}
+
+pre_remove() {
+  # Runs while the unit files still exist so disable can remove the
+  # multi-user.target.wants symlink and ExecStop= can wake the monitor
+  echo "=== Disabling monitor power saving ==="
+  systemctl disable --now monitor-power.target monitor-power.service || true
+}
+
+post_remove() {
+  echo "=== Reloading systemd manager configuration ==="
+  systemctl daemon-reload
+}

@@ -1,0 +1,23 @@
+[Unit]
+Description=Blank the console after 1 minute idle, power the monitor down after 5 minutes idle (system stays running)
+After=getty@tty1.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+TTYPath=/dev/tty1
+StandardOutput=tty
+StandardError=tty
+# Kernel console blanking is idle-based: console activity resets both
+# clocks. --blank is minutes idle before the screen blanks (monitor
+# sleep); --powerdown is minutes spent blanked/suspended before the
+# monitor enters VESA powerdown, so 1 + 4 gives powerdown at 5 minutes
+# idle in total, not 9.
+ExecStart=/usr/bin/setterm --term linux --blank=1 --powerdown=4
+ExecStop=/usr/bin/setterm --term linux --powerdown=0 --blank=0
+# --blank=poke unblanks via an ioctl on stdin, which is /dev/null under
+# systemd, so feed it the console directly
+ExecStop=/bin/sh -c '/usr/bin/setterm --term linux --blank=poke </dev/tty1'
+
+[Install]
+WantedBy=monitor-power.target
